@@ -27,58 +27,80 @@ let racket2 = canvas.getContext("2d");
 let ballRender = canvas.getContext("2d");
 let score = canvas.getContext("2d");
 
-let currentKeyDown = 0;
+let player1CurrentKeyDown = 0;
+let player2CurrentKeyDown = 0;
 
 let ball = {
+
     x: 0.5,
     y: 0.28125,
-    velocityX: 0.001,
-    velocityY: 0.001,
+    velocityX: 0.002,
+    velocityY: 0.002,
 };
 
 document.addEventListener('keydown', (event) => {
+
     let key = event.code;
-    if (currentKeyDown === 0) {
-        currentKeyDown = key;
+
+
+    if (key == "keyW" || key == "keyS" || key == "ArrowDown" || key == "ArrowUp") {
+        
+        console.log("Down:" + key)
+
+        player1CurrentKeyDown = player1CurrentKeyDown === 0 ? key : 0;
+        player2CurrentKeyDown = player2CurrentKeyDown === 0 ? key : 0;
     }
 });
 
 document.addEventListener("keyup", (event) =>  {
-    let key = event.code;
-    if (currentKeyDown == key) {
-        currentKeyDown = 0;
-    }
-});
 
+    let key = event.code;
+
+    player1CurrentKeyDown = player1CurrentKeyDown == key ? 0 : player1CurrentKeyDown
+    player2CurrentKeyDown = player2CurrentKeyDown == key ? 0 : player2CurrentKeyDown
+});
 
 function KeyboardController() {
 
-    switch (currentKeyDown) {
-        case "KeyW":
-            racket1Y -= racketSpeed;
-            console.log("W");
-            break;
-        case "KeyS":
-            racket1Y += racketSpeed;
-            console.log("S");
-            break;
-        case "ArrowUp":
-            racket2Y -= racketSpeed;
-            console.log("PIL UPP");
-            break;
-        case "ArrowDown":
-            racket2Y += racketSpeed;
-            console.log("PIL NER");
-            break;
+    if (player1CurrentKeyDown == "keyW" && player2CurrentKeyDown == "ArrowDown") {
+        
+        racket1Y -= racketSpeed
+        racket2Y -= racketSpeed
+    } else if (player1CurrentKeyDown == "keyW" && player2CurrentKeyDown == "ArrowUp") {
+        
+        racket1Y -= racketSpeed
+        racket2Y += racketSpeed
+    } else if(player1CurrentKeyDown == "keyS" && player2CurrentKeyDown == "ArrowDown") {
+        
+        racket1Y -= racketSpeed
+        racket2Y += racketSpeed
+    } else if (player1CurrentKeyDown == "keyS" && player2CurrentKeyDown == "ArrowUp") {
+        
+        racket1Y += racketSpeed
+        racket2Y += racketSpeed
+    } else if (player1CurrentKeyDown == "keyW") {
+        
+        racket1Y -= racketSpeed
+    } else if (player1CurrentKeyDown == "keyS") {
+        
+        racket1Y += racketSpeed
+    } else if (player2CurrentKeyDown == "ArrowDown") {
+        
+        racket2Y -= racketSpeed
+    } else if (player2CurrentKeyDown == "ArrowUp") {
+        
+        racket2Y += racketSpeed
     }
-
+    
 };
 
 function format(quotient) {
+
     return quotient * width;
 }
 
 function checkWinner(x) {
+
     if (x >= 1) {
         return 1;
     } else if (x <= 0) {
@@ -89,7 +111,8 @@ function checkWinner(x) {
 }
 
 function newVelocities(ball) {
-    if ((ball.x <= racketMargin + racketWidth && ball.y > racket1Y - ballLength && ball.y < racket1Y + racketHeight) || (ball.x >= 1 - (racketMargin + racketWidth + ballLength) && ball.y > racket2Y - ballLength && ball.y < racket2Y + racketHeight)) {
+
+    if ((ball.x <= racketMargin + racketWidth && ball.x >= racketMargin && ball.y > racket1Y - ballLength && ball.y < racket1Y + racketHeight) || (ball.x >= 1 - (racketMargin + racketWidth + ballLength) && ball.x <= 1 - (racketMargin + ballLength) && ball.y > racket2Y - ballLength && ball.y < racket2Y + racketHeight)) {
         ball.velocityX = -ball.velocityX;
 
         return ball;
@@ -103,6 +126,7 @@ function newVelocities(ball) {
 }
 
 function draw() {
+    
     racket1.clearRect(0, 0, format(width), format(height));
 
     score.font = "30px Arial";
@@ -150,6 +174,8 @@ function game() {
     if (winner == 1 || winner == 2) {
         ball.x = 0.5;
         ball.y = 0.28125;
+        ball.velocityX = 0.001;
+        ball.velocityY = 0.001;
     }
 
 
