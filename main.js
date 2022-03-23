@@ -18,7 +18,8 @@ let score1 = 0;
 let score2 = 0;
 let racketMargin = 0.02;
 let racketWidth = 0.005;
-let racketSpeed = 0.001;
+let racketSpeed = 0.0015;
+let ballVelocity = 0.002;
 
 
 let canvas = document.getElementById("canvas");
@@ -34,21 +35,29 @@ let ball = {
 
     x: 0.5,
     y: 0.28125,
-    velocityX: 0.002,
-    velocityY: 0.002,
+    velocityX: ballVelocity,
+    velocityY: ballVelocity,
 };
 
 document.addEventListener('keydown', (event) => {
 
     let key = event.code;
 
+    if (key == "KeyW" || key == "KeyS") {
 
-    if (key == "keyW" || key == "keyS" || key == "ArrowDown" || key == "ArrowUp") {
+        console.log("T");
         
-        console.log("Down:" + key)
+        player1CurrentKeyDown = key;
+    }
+});
 
-        player1CurrentKeyDown = player1CurrentKeyDown === 0 ? key : 0;
-        player2CurrentKeyDown = player2CurrentKeyDown === 0 ? key : 0;
+document.addEventListener('keydown', (event) => {
+
+    let key = event.code;
+
+    if (key == "ArrowDown" || key == "ArrowUp") {
+
+        player2CurrentKeyDown = key;
     }
 });
 
@@ -62,32 +71,32 @@ document.addEventListener("keyup", (event) =>  {
 
 function KeyboardController() {
 
-    if (player1CurrentKeyDown == "keyW" && player2CurrentKeyDown == "ArrowDown") {
+    if (player1CurrentKeyDown == "KeyW" && player2CurrentKeyDown == "ArrowUp") {
         
         racket1Y -= racketSpeed
         racket2Y -= racketSpeed
-    } else if (player1CurrentKeyDown == "keyW" && player2CurrentKeyDown == "ArrowUp") {
+    } else if (player1CurrentKeyDown == "KeyW" && player2CurrentKeyDown == "ArrowDown") {
         
         racket1Y -= racketSpeed
         racket2Y += racketSpeed
-    } else if(player1CurrentKeyDown == "keyS" && player2CurrentKeyDown == "ArrowDown") {
-        
-        racket1Y -= racketSpeed
-        racket2Y += racketSpeed
-    } else if (player1CurrentKeyDown == "keyS" && player2CurrentKeyDown == "ArrowUp") {
+    } else if(player1CurrentKeyDown == "KeyS" && player2CurrentKeyDown == "ArrowDown") {
         
         racket1Y += racketSpeed
         racket2Y += racketSpeed
-    } else if (player1CurrentKeyDown == "keyW") {
-        
-        racket1Y -= racketSpeed
-    } else if (player1CurrentKeyDown == "keyS") {
+    } else if (player1CurrentKeyDown == "KeyS" && player2CurrentKeyDown == "ArrowUp") {
         
         racket1Y += racketSpeed
-    } else if (player2CurrentKeyDown == "ArrowDown") {
-        
         racket2Y -= racketSpeed
+    } else if (player1CurrentKeyDown == "KeyW") {
+        
+        racket1Y -= racketSpeed
+    } else if (player1CurrentKeyDown == "KeyS") {
+        
+        racket1Y += racketSpeed
     } else if (player2CurrentKeyDown == "ArrowUp") {
+        
+        racket2Y -= racketSpeed
+    } else if (player2CurrentKeyDown == "ArrowDown") {
         
         racket2Y += racketSpeed
     }
@@ -174,8 +183,8 @@ function game() {
     if (winner == 1 || winner == 2) {
         ball.x = 0.5;
         ball.y = 0.28125;
-        ball.velocityX = 0.001;
-        ball.velocityY = 0.001;
+        ball.velocityX = ballVelocity;
+        ball.velocityY = ballVelocity;
     }
 
 
